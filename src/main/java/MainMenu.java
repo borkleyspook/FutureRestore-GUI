@@ -1065,12 +1065,12 @@ public class MainMenu {
             org.apache.hc.client5.http.classic.methods.HttpGet request = new org.apache.hc.client5.http.classic.methods.HttpGet(url);
             request.addHeader("Accept", "application/vnd.github.v3+json");
             org.apache.hc.client5.http.impl.classic.CloseableHttpResponse result = httpClient.execute(request);
-			try {
-				json = org.apache.hc.core5.http.io.entity.EntityUtils.toString(result.getEntity(), "UTF-8");
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            try {
+                json = org.apache.hc.core5.http.io.entity.EntityUtils.toString(result.getEntity(), "UTF-8");
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             System.out.println(json);
         } 
         catch (IOException ex) 
@@ -1081,11 +1081,11 @@ public class MainMenu {
         return json; // Newest release
     }
     File downloadFutureRestore(String urlString) {
-    	if (urlString.contains("/actions/artifacts/"))
-    	{
-    		urlString = urlString.replace("api.github.com/repos", "nightly.link").replace("/zip", ".zip");
-    	}
-    	String homeDirectory = System.getProperty("user.home");
+        if (urlString.contains("/actions/artifacts/"))
+        {
+            urlString = urlString.replace("api.github.com/repos", "nightly.link").replace("/zip", ".zip");
+        }
+        String homeDirectory = System.getProperty("user.home");
         File frGuiDir = new File(homeDirectory + "/FutureRestoreGUI");
 
         // Make directory to store files
@@ -1128,11 +1128,11 @@ public class MainMenu {
             SwingUtilities.invokeLater(() -> {
                 messageToLog("FutureRestore finished downloading.");
                 /*try {
-					TimeUnit.SECONDS.sleep(5);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }*/
                 currentTaskTextField.setText("");
                 logProgressBar.setValue(0);
             });
@@ -1467,23 +1467,23 @@ public class MainMenu {
                 
                 if (futureRestoreGUIVers.compareTo(newestTagVers) == 1)
                 {
-                	noticeText = "You are running a newer version of FutureRestore GUI than is available on GitHub.";
-                	localVersionIsNewer = true;
+                    noticeText = "You are running a newer version of FutureRestore GUI than is available on GitHub.";
+                    localVersionIsNewer = true;
                 }
                 else if (futureRestoreGUIVers.compareTo(newestTagVers) == -1)
                 {
-                	noticeText = "A newer version of FutureRestore GUI is available.";
-                	displayChangeLog = true;
-                	updateAvailable = true;
-                	displayWindow = true;
+                    noticeText = "A newer version of FutureRestore GUI is available.";
+                    displayChangeLog = true;
+                    updateAvailable = true;
+                    displayWindow = true;
                 }
                 else if (futureRestoreGUIVers.compareTo(newestTagVers) == 0)
                 {
-                	noticeText = "You are running the newest version of FutureRestore GUI.";
+                    noticeText = "You are running the newest version of FutureRestore GUI.";
                 }
                 else
                 {
-                    System.out.println("An error occurred while finding the latest version of FutureRestore GUI.");                	
+                    System.out.println("An error occurred while finding the latest version of FutureRestore GUI.");                    
                 }
                 // if (!newestTag.equals(currentFRGUITag)) {
                 if (displayWindow) {
@@ -1499,7 +1499,7 @@ public class MainMenu {
                     // Fetch release notes
                     String mdReleaseBody = "";
                     if (displayChangeLog)
-                    	mdReleaseBody = FRUtils.getLatestFrguiReleaseBody();
+                        mdReleaseBody = FRUtils.getLatestFrguiReleaseBody();
                     String htmlReleaseBody = "<html>" +
                             "<head>" +
                             "<style type=\"text/css\">" +
@@ -1531,30 +1531,30 @@ public class MainMenu {
                     
                     if (updateAvailable)
                     {
-	                    Object[] choices = {"Update now", "Remind me later"};
-	                    Object defaultChoice = choices[0];
-	                    int response = JOptionPane.showOptionDialog(mainMenuFrame, panel, "Update FutureRestore GUI", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, defaultChoice);
-	
-	                    if (response == JOptionPane.YES_OPTION) {
-	                        boolean didSucceedUpdate = FRUtils.updateFRGUI(mainMenuInstance);
-	                        // If update failed fatally, enable everything again
-	                        if (!didSucceedUpdate) {
-	                            FRUtils.setEnabled(mainMenuInstance.mainMenuView, true, true);
-	                        }
-	                    }
+                        Object[] choices = {"Update now", "Remind me later"};
+                        Object defaultChoice = choices[0];
+                        int response = JOptionPane.showOptionDialog(mainMenuFrame, panel, "Update FutureRestore GUI", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, defaultChoice);
+    
+                        if (response == JOptionPane.YES_OPTION) {
+                            boolean didSucceedUpdate = FRUtils.updateFRGUI(mainMenuInstance);
+                            // If update failed fatally, enable everything again
+                            if (!didSucceedUpdate) {
+                                FRUtils.setEnabled(mainMenuInstance.mainMenuView, true, true);
+                            }
+                        }
                     }
                     else
                     {
-	                    Object[] choices = {"Close"};
-	                    Object defaultChoice = choices[0];
-	                    int response = JOptionPane.showOptionDialog(mainMenuFrame, panel, "Update FutureRestore GUI", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, defaultChoice);
+                        Object[] choices = {"Close"};
+                        Object defaultChoice = choices[0];
+                        int response = JOptionPane.showOptionDialog(mainMenuFrame, panel, "Update FutureRestore GUI", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, defaultChoice);
                     }
 
                 } else {
-                	if (localVersionIsNewer)
-                	{
-                		noticeText += (" (Local: " + localFutureRestoreGUIString + ", GitHub: " + newestTagRaw + ")");
-            		}
+                    if (localVersionIsNewer)
+                    {
+                        noticeText += (" (Local: " + localFutureRestoreGUIString + ", GitHub: " + newestTagRaw + ")");
+                    }
                     System.out.println(noticeText);
                     mainMenuInstance.messageToLog(noticeText);
                 }
