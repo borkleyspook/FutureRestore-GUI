@@ -1448,42 +1448,58 @@ public class MainMenu {
 
                 String newestTag = (String) newestRelease.get("tag_name");
                 String newestTagRaw = newestTag.substring(1);
-                System.out.println("Newest FRGUI version: " + newestTag);
+                System.out.println("Newest FutureRestore GUI version (GitHub): " + newestTag);
 
                 // If user is not on latest version
-                String currentFRGUITag = "v" + Main.futureRestoreGUIVersion;
+                
+                // String localFutureRestoreGUIString = "1.98.2";
+                String localFutureRestoreGUIString = Main.futureRestoreGUIVersion;
+                String currentFRGUITag = "v" + localFutureRestoreGUIString;
 
                 Version newestTagVers = new Version(newestTagRaw);
-                Version futureRestoreGUIVers = new Version(Main.futureRestoreGUIVersion);
+                Version futureRestoreGUIVers = new Version(localFutureRestoreGUIString);
+                
+                String noticeText = "";
+                boolean displayChangeLog = false;
+                boolean displayWindow = false;
+                boolean updateAvailable = false;
+                boolean localVersionIsNewer = false;
                 
                 if (futureRestoreGUIVers.compareTo(newestTagVers) == 1)
                 {
-                    System.out.println("You are running a newer version of FutureRestore GUI than is available on GitHub.");
+                	noticeText = "You are running a newer version of FutureRestore GUI than is available on GitHub.";
+                	localVersionIsNewer = true;
                 }
                 else if (futureRestoreGUIVers.compareTo(newestTagVers) == -1)
                 {
-                    System.out.println("You are running an older version of FutureRestore GUI than is available on GitHub.");
+                	noticeText = "A newer version of FutureRestore GUI is available.";
+                	displayChangeLog = true;
+                	updateAvailable = true;
+                	displayWindow = true;
                 }
                 else if (futureRestoreGUIVers.compareTo(newestTagVers) == 0)
                 {
-                    System.out.println("You are running the newest version of FutureRestore GUI.");
+                	noticeText = "You are running the newest version of FutureRestore GUI.";
                 }
                 else
                 {
                     System.out.println("An error occurred while finding the latest version of FutureRestore GUI.");                	
                 }
-                if (!newestTag.equals(currentFRGUITag)) {
-                    System.out.println("A newer version of FutureRestore GUI is available.");
-                    mainMenuInstance.messageToLog("A newer version of FutureRestore GUI is available.");
+                // if (!newestTag.equals(currentFRGUITag)) {
+                if (displayWindow) {
+                    System.out.println(noticeText);
+                    mainMenuInstance.messageToLog(noticeText);
 
                     // Label on top of release notes
-                    JLabel label = new JLabel("A newer version of FutureRestore GUI is available.\n" +
-                            "You're on version " + Main.futureRestoreGUIVersion + " and the latest version is " + newestTag + ".");
+                    JLabel label = new JLabel(noticeText + "\n" +
+                            " You're on version " + localFutureRestoreGUIString + " and the latest version on GitHub is " + newestTag + ".");
                     Border padding = BorderFactory.createEmptyBorder(0, 0, 10, 10);
                     label.setBorder(padding);
 
                     // Fetch release notes
-                    String mdReleaseBody = FRUtils.getLatestFrguiReleaseBody();
+                    String mdReleaseBody = "";
+                    if (displayChangeLog)
+                    	mdReleaseBody = FRUtils.getLatestFrguiReleaseBody();
                     String htmlReleaseBody = "<html>" +
                             "<head>" +
                             "<style type=\"text/css\">" +
@@ -1512,22 +1528,35 @@ public class MainMenu {
                     panel.setLayout(boxlayout);
                     panel.add(label);
                     panel.add(scrollPane);
-
-                    Object[] choices = {"Update now", "Remind me later"};
-                    Object defaultChoice = choices[0];
-                    int response = JOptionPane.showOptionDialog(mainMenuFrame, panel, "Update FutureRestore GUI", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, defaultChoice);
-
-                    if (response == JOptionPane.YES_OPTION) {
-                        boolean didSucceedUpdate = FRUtils.updateFRGUI(mainMenuInstance);
-                        // If update failed fatally, enable everything again
-                        if (!didSucceedUpdate) {
-                            FRUtils.setEnabled(mainMenuInstance.mainMenuView, true, true);
-                        }
+                    
+                    if (updateAvailable)
+                    {
+	                    Object[] choices = {"Update now", "Remind me later"};
+	                    Object defaultChoice = choices[0];
+	                    int response = JOptionPane.showOptionDialog(mainMenuFrame, panel, "Update FutureRestore GUI", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, defaultChoice);
+	
+	                    if (response == JOptionPane.YES_OPTION) {
+	                        boolean didSucceedUpdate = FRUtils.updateFRGUI(mainMenuInstance);
+	                        // If update failed fatally, enable everything again
+	                        if (!didSucceedUpdate) {
+	                            FRUtils.setEnabled(mainMenuInstance.mainMenuView, true, true);
+	                        }
+	                    }
+                    }
+                    else
+                    {
+	                    Object[] choices = {"Close"};
+	                    Object defaultChoice = choices[0];
+	                    int response = JOptionPane.showOptionDialog(mainMenuFrame, panel, "Update FutureRestore GUI", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, defaultChoice);
                     }
 
                 } else {
-                    System.out.println("You're on the latest version of FutureRestore GUI.");
-                    mainMenuInstance.messageToLog("You're on the latest version of FutureRestore GUI.");
+                	if (localVersionIsNewer)
+                	{
+                		noticeText += (" (Local: " + localFutureRestoreGUIString + ", GitHub: " + newestTagRaw + ")");
+            		}
+                    System.out.println(noticeText);
+                    mainMenuInstance.messageToLog(noticeText);
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
