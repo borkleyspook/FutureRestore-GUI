@@ -964,7 +964,10 @@ public class MainMenu {
         Map<String, Object> result = gson.fromJson(content, Map.class);
         ArrayList<Map<String, Object>> artifacts = (ArrayList<Map<String, Object>>) result.get("artifacts");
         
-        String OSSpoofName = "mac";
+        // String OSSpoofName = operatingSystem;
+        // String OSSpoofName = "mac";
+
+        String OSSpoofName = operatingSystem;
         
         // Loop through assets
         for (Map<String, Object> artifact : artifacts) {
