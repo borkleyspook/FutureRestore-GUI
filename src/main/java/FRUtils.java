@@ -383,10 +383,7 @@ public class FRUtils {
     }
 
     public static String getLatestFrguiReleaseBody() throws IOException {
-        String content = MainMenu.getRequestUrl("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases");
-
-        Gson gson = new Gson();
-        ArrayList<Map<String, Object>> result = gson.fromJson(content, ArrayList.class);
+        ArrayList<Map<String, Object>> result = MainMenu.getReleaseInfoGithubArrayList("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases");
         Map<String, Object> newestRelease = result.get(0);
         return (String) newestRelease.get("body");
     }
