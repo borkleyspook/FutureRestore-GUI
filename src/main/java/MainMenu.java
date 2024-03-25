@@ -1447,10 +1447,31 @@ public class MainMenu {
                 }
 
                 String newestTag = (String) newestRelease.get("tag_name");
+                String newestTagRaw = newestTag.substring(1);
                 System.out.println("Newest FRGUI version: " + newestTag);
 
                 // If user is not on latest version
                 String currentFRGUITag = "v" + Main.futureRestoreGUIVersion;
+
+                Version newestTagVers = new Version(newestTagRaw);
+                Version futureRestoreGUIVers = new Version(Main.futureRestoreGUIVersion);
+                
+                if (futureRestoreGUIVers.compareTo(newestTagVers) == 1)
+                {
+                    System.out.println("You are running a newer version of FutureRestore GUI than is available on GitHub.");
+                }
+                else if (futureRestoreGUIVers.compareTo(newestTagVers) == -1)
+                {
+                    System.out.println("You are running an older version of FutureRestore GUI than is available on GitHub.");
+                }
+                else if (futureRestoreGUIVers.compareTo(newestTagVers) == 0)
+                {
+                    System.out.println("You are running the newest version of FutureRestore GUI.");
+                }
+                else
+                {
+                    System.out.println("An error occurred while finding the latest version of FutureRestore GUI.");                	
+                }
                 if (!newestTag.equals(currentFRGUITag)) {
                     System.out.println("A newer version of FutureRestore GUI is available.");
                     mainMenuInstance.messageToLog("A newer version of FutureRestore GUI is available.");
