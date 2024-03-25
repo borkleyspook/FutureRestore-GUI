@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1122,9 +1123,15 @@ public class MainMenu {
             }
 
             SwingUtilities.invokeLater(() -> {
+                messageToLog("FutureRestore finished downloading.");
+                /*try {
+					TimeUnit.SECONDS.sleep(5);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
                 currentTaskTextField.setText("");
                 logProgressBar.setValue(0);
-                messageToLog("FutureRestore finished downloading.");
             });
         } catch (IOException e) {
             System.err.println("Unable to download FutureRestore.");
