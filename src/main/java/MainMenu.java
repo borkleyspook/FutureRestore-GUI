@@ -16,6 +16,7 @@ import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.hc.core5.http.ParseException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.IOException;
 
 public class MainMenu {
     private JButton selectBlobFileButton;
@@ -1034,10 +1036,31 @@ public class MainMenu {
     }
 
     private Map<String, Object> getLatestFrGithub() throws IOException {
-        String content = getRequestUrl("https://api.github.com/repos/futurerestore/futurerestore/releases");
+        String url = "https://api.github.com/repos/futurerestore/futurerestore/releases";
+        String json = "";
+
+        try (org.apache.hc.client5.http.impl.classic.CloseableHttpClient httpClient = org.apache.hc.client5.http.impl.classic.HttpClientBuilder.create().build()) 
+        {
+            org.apache.hc.client5.http.classic.methods.HttpGet request = new org.apache.hc.client5.http.classic.methods.HttpGet(url);
+            request.addHeader("Accept", "application/vnd.github.v3+json");
+            org.apache.hc.client5.http.impl.classic.CloseableHttpResponse result = httpClient.execute(request);
+			try {
+				json = org.apache.hc.core5.http.io.entity.EntityUtils.toString(result.getEntity(), "UTF-8");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            System.out.println(json);
+        } 
+        catch (IOException ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        //String content = getRequestUrl("https://api.github.com/repos/futurerestore/futurerestore/releases");
 
         Gson gson = new Gson();
-        ArrayList<Map<String, Object>> result = gson.fromJson(content, ArrayList.class);
+        ArrayList<Map<String, Object>> result = gson.fromJson(json, ArrayList.class);
         return result.get(0); // Newest release
     }
 
