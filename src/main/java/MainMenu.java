@@ -1345,6 +1345,8 @@ public class MainMenu {
             properties.setProperty("check_updates", "true");
         if (properties.getProperty("futurerestore_beta") == null)
             properties.setProperty("futurerestore_beta", "true");
+        if (properties.getProperty("frgui_beta") == null)
+            properties.setProperty("frgui_beta", (Main.futureRestoreGUIPrerelease ? "true" : "false"));
         if (properties.getProperty("theme_preference") == null)
             properties.setProperty("theme_preference", "auto");
 
@@ -1438,7 +1440,7 @@ public class MainMenu {
                 final Gson gson = new Gson();
 
                 Map<String, Object> newestRelease;
-                if (Main.futureRestoreGUIPrerelease) {
+                if (MainMenu.properties.getProperty("frgui_beta").equals("true")) {
                     ArrayList<Map<String, Object>> result = getReleaseInfoGithubArrayList("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases");
                     newestRelease = result.get(0);
                 } else {
