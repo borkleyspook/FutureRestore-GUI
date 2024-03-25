@@ -17,6 +17,7 @@ public class SettingsMenu {
     private JRadioButton lightRadioButton;
     private JRadioButton darkRadioButton;
     private JCheckBox futureRestoreBetaCheckBox;
+    private JCheckBox futureRestoreGUIBetaCheckBox;
 
     public SettingsMenu() {
         shareLogsCheckBox.addActionListener(e -> {
@@ -82,6 +83,16 @@ public class SettingsMenu {
             }
         });
 
+        futureRestoreGUIBetaCheckBox.addActionListener(e -> {
+            if (futureRestoreGUIBetaCheckBox.isSelected()) {
+                MainMenu.properties.setProperty("frgui_beta", "true");
+                MainMenu.savePreferences();
+            } else {
+                MainMenu.properties.setProperty("frgui_beta", "false");
+                MainMenu.savePreferences();
+            }
+        });
+
         // Changing theme pref
         ActionListener listener = e -> {
             JRadioButton buttonPressed = (JRadioButton) e.getSource();
@@ -125,6 +136,9 @@ public class SettingsMenu {
 
         // FR beta update check box
         settingsMenuInstance.futureRestoreBetaCheckBox.setSelected(MainMenu.properties.getProperty("futurerestore_beta").equals("true"));
+
+        // FR GUI beta update check box
+        settingsMenuInstance.futureRestoreGUIBetaCheckBox.setSelected(MainMenu.properties.getProperty("frgui_beta").equals("true"));
 
         // Theme prefs radio buttons
         switch (MainMenu.properties.getProperty("theme_preference")) {
@@ -177,7 +191,7 @@ public class SettingsMenu {
         final JPanel spacer2 = new JPanel();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 12;
+        gbc.gridy = 14;
         gbc.fill = GridBagConstraints.VERTICAL;
         settingsMenuView.add(spacer2, gbc);
         final JLabel label2 = new JLabel();
@@ -260,7 +274,7 @@ public class SettingsMenu {
         label5.setText("Set the theme of the GUI. Requires a restart to take effect.");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
-        gbc.gridy = 11;
+        gbc.gridy = 13;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 5, 0, 10);
         settingsMenuView.add(label5, gbc);
@@ -331,11 +345,30 @@ public class SettingsMenu {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 10, 0, 0);
         settingsMenuView.add(futureRestoreBetaCheckBox, gbc);
+        futureRestoreGUIBetaCheckBox = new JCheckBox();
+        futureRestoreGUIBetaCheckBox.setText("FutureRestore GUI Beta Track");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 11;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 10, 0, 0);
+        settingsMenuView.add(futureRestoreGUIBetaCheckBox, gbc);
+        
+        // New line for the description
+        final JLabel descriptionLabel = new JLabel();
+        descriptionLabel.setText("FutureRestore GUI updates checks will take prereleases into account.");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2; // Adjust the column position as needed
+        gbc.gridy = 11; // Adjust the row position as needed
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 5, 0, 10);
+        settingsMenuView.add(descriptionLabel, gbc);
+        
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 11;
+        gbc.gridy = 13;
         gbc.fill = GridBagConstraints.BOTH;
         settingsMenuView.add(panel1, gbc);
         autoRadioButton = new JRadioButton();
@@ -365,6 +398,23 @@ public class SettingsMenu {
         buttonGroup.add(autoRadioButton);
         buttonGroup.add(lightRadioButton);
         buttonGroup.add(darkRadioButton);
+
+        final JSeparator separator10 = new JSeparator();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 12;
+        gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.BOTH;
+        settingsMenuView.add(separator10, gbc);
+
+        final JSeparator separator11 = new JSeparator();
+        separator11.setOrientation(1);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 13;
+        gbc.fill = GridBagConstraints.BOTH;
+        settingsMenuView.add(separator11, gbc);
+
     }
 
     /**

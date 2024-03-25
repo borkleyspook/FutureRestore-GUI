@@ -122,7 +122,7 @@ public class FRUtils {
             Gson gson = new Gson();
             System.out.println("Finding download...");
             Map<String, Object> latestReleaseApi;
-            if (Main.futureRestoreGUIPrerelease) {
+            if (MainMenu.properties.getProperty("frgui_beta").equals("true")) {
                 URL releasesApiUrl = new URL("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases");
                 String releasesApiResponse = IOUtils.toString(releasesApiUrl.openConnection().getInputStream(), StandardCharsets.UTF_8);
                 ArrayList<Map<String, Object>> releasesApi = gson.fromJson(releasesApiResponse, ArrayList.class);
