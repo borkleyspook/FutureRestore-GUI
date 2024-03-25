@@ -1077,7 +1077,11 @@ public class MainMenu {
         return json; // Newest release
     }
     File downloadFutureRestore(String urlString) {
-        String homeDirectory = System.getProperty("user.home");
+    	if (urlString.contains("/actions/artifacts/"))
+    	{
+    		urlString = urlString.replace("api.github.com/repos", "nightly.link").replace("/zip", ".zip");
+    	}
+    	String homeDirectory = System.getProperty("user.home");
         File frGuiDir = new File(homeDirectory + "/FutureRestoreGUI");
 
         // Make directory to store files
