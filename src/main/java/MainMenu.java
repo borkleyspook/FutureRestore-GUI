@@ -1,5 +1,6 @@
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.json.Json;
 import com.github.rjeschke.txtmark.Processor;
 import com.google.gson.Gson;
 import com.jthemedetecor.OsThemeDetector;
@@ -955,18 +956,21 @@ public class MainMenu {
 
         Map<String, String> linkNameMap = new HashMap<>();
 
-        String content = getRequestUrl("https://api.github.com/repos/futurerestore/futurerestore/actions/artifacts");
+        // Probably won't work
+        String content = getReleaseInfoGithubJson("https://api.github.com/repos/futurerestore/futurerestore/actions/artifacts");
 
         Gson gson = new Gson();
         Map<String, Object> result = gson.fromJson(content, Map.class);
         ArrayList<Map<String, Object>> artifacts = (ArrayList<Map<String, Object>>) result.get("artifacts");
-
+        
+        String OSSpoofName = "mac";
+        
         // Loop through assets
         for (Map<String, Object> artifact : artifacts) {
             String assetName = ((String) artifact.get("name"));
             // Look for our OS and release binary
             String lcAssetName = assetName.toLowerCase();
-            if (lcAssetName.contains(operatingSystem) && lcAssetName.contains("release")) {
+            if (lcAssetName.contains(OSSpoofName) && lcAssetName.contains("release")) {
                 // If we're Mac
                 if (lcAssetName.contains("mac")) {
                     // If the asset has an architecture in it
@@ -1036,7 +1040,20 @@ public class MainMenu {
     }
 
     private Map<String, Object> getLatestFrGithub() throws IOException {
-        String url = "https://api.github.com/repos/futurerestore/futurerestore/releases";
+        ArrayList<Map<String, Object>> result = getReleaseInfoGithubArrayList("https://api.github.com/repos/futurerestore/futurerestore/releases");
+        return result.get(0); // Newest release
+    }
+
+    static ArrayList<Map<String, Object>> getReleaseInfoGithubArrayList(String url) throws IOException 
+    {
+        String json = getReleaseInfoGithubJson(url);
+        Gson gson = new Gson();
+        ArrayList<Map<String, Object>> result = gson.fromJson(json, ArrayList.class);
+        return result; // Newest release
+    }
+    
+    static String getReleaseInfoGithubJson(String url) throws IOException 
+    {
         String json = "";
 
         try (org.apache.hc.client5.http.impl.classic.CloseableHttpClient httpClient = org.apache.hc.client5.http.impl.classic.HttpClientBuilder.create().build()) 
@@ -1057,13 +1074,8 @@ public class MainMenu {
             ex.printStackTrace();
         }
 
-        //String content = getRequestUrl("https://api.github.com/repos/futurerestore/futurerestore/releases");
-
-        Gson gson = new Gson();
-        ArrayList<Map<String, Object>> result = gson.fromJson(json, ArrayList.class);
-        return result.get(0); // Newest release
+        return json; // Newest release
     }
-
     File downloadFutureRestore(String urlString) {
         String homeDirectory = System.getProperty("user.home");
         File frGuiDir = new File(homeDirectory + "/FutureRestoreGUI");
@@ -1413,11 +1425,10 @@ public class MainMenu {
 
                 Map<String, Object> newestRelease;
                 if (Main.futureRestoreGUIPrerelease) {
-                    String content = getRequestUrl("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases");
-                    ArrayList<Map<String, Object>> result = gson.fromJson(content, ArrayList.class);
+                    ArrayList<Map<String, Object>> result = getReleaseInfoGithubArrayList("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases");
                     newestRelease = result.get(0);
                 } else {
-                    String content = getRequestUrl("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases/latest");
+                    String content = getReleaseInfoGithubJson("https://api.github.com/repos/CoocooFroggy/FutureRestore-GUI/releases/latest");
                     newestRelease = gson.fromJson(content, Map.class);
                 }
 
