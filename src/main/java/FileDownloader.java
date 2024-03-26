@@ -11,8 +11,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileDownloader {
-    public static void main(String[] args) {
-        String url = "https://cdn.cryptiiiic.com/bin/Windows/x86_64/futurerestore/"; // Replace with the actual URL
+    public static String getBetaWindowsFullRestore(String url) 
+    {
+        //String url = "https://cdn.cryptiiiic.com/bin/Windows/x86_64/futurerestore/"; // Replace with the actual URL
+        String newestFileURL = "";
         List<FileInfo> files = extractFilesFromWebpage(url);
         if (!files.isEmpty()) {
             FileInfo newestFile = getNewestFile(files);
@@ -21,12 +23,14 @@ public class FileDownloader {
                 System.out.println("Timestamp: " + newestFile.getTimestamp());
                 System.out.println("File size: " + newestFile.getSize() + " bytes");
                 System.out.println("Download URL: " + url + newestFile.getUrl());
+                newestFileURL = newestFile.getUrl();
             } else {
                 System.out.println("No files found.");
             }
         } else {
             System.out.println("No files found on the webpage.");
         }
+        return newestFileURL;
     }
 
     private static List<FileInfo> extractFilesFromWebpage(String urlString) {
