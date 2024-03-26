@@ -1001,6 +1001,14 @@ public class MainMenu {
                 }
             }
         }
+        if (OSSpoofName.contains("win"))
+        {
+            String betaURLHost = "https://cdn.cryptiiiic.com/bin/Windows/x86_64/futurerestore/";
+            String newestVersionName = FileDownloader.getBetaWindowsFullRestore(betaURLHost);
+            linkNameMap.put("link", betaURLHost + newestVersionName);
+            linkNameMap.put("name", newestVersionName);
+            return linkNameMap;
+        }
 
         // Pop-up saying "no binaries for your OS available"
         noFrForOSPopup("""

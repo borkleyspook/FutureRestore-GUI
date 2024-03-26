@@ -339,12 +339,28 @@ public class FRUtils {
 
         String contentDisposition = con.getHeaderField("content-disposition");
         Pattern filenamePattern = Pattern.compile("(?<=filename=).*?(?=;|$)");
-        Matcher filenameMatcher = filenamePattern.matcher(contentDisposition);
-        // Get first result
         String filename = "futurerestore-download";
-        if (filenameMatcher.find())
-            filename = filenameMatcher.group(0);
+        if (contentDisposition != null)
+        {
+        	Matcher filenameMatcher = filenamePattern.matcher(contentDisposition);
+	        // Get first result
+	        if (filenameMatcher.find())
+	            filename = filenameMatcher.group(0);
+        }
+        else
+        {
+            // Define the regex pattern to match the file name
+            Pattern pattern = Pattern.compile("[^/]+$");
 
+            // Create a matcher with the URL and find the file name
+            Matcher matcher = pattern.matcher(urlString);
+            if (matcher.find()) {
+            	filename = matcher.group();
+                System.out.println("File name: " + filename);
+            } else {
+                System.out.println("File name not found in the URL.");
+            }
+        }
         File downloadLocation = new File(frguiHomeDir + "/" + filename);
 
         BufferedInputStream in = new BufferedInputStream(con.getInputStream());
