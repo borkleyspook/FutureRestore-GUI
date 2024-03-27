@@ -205,19 +205,50 @@ public class MainMenu {
                 String homeDirectory = System.getProperty("user.home");
                 String finalFrPath = homeDirectory + "/FutureRestoreGUI";
                 File futureRestoreExecutable = null;
-                try {
-                    futureRestoreExecutable = extractFutureRestore(downloadedFr, finalFrPath, osName);
-                } catch (IOException | ArchiveException exception) {
-                    System.out.println("Unable to decompress " + downloadedFr);
-                    messageToLog("Unable to decompress " + downloadedFr);
-                    exception.printStackTrace();
+
+                // Check to see if directory exists to store files.
+                // If not, create it.
+                File extractedDir = new File(finalFrPath + "/extracted");
+                if (!extractedDir.exists())
+                    extractedDir.mkdir();
+
+                // Skip decompression if the EXE is directly downloaded.
+                String futureRestoreFileName = downloadedFr.getName();
+                String downloadedFileExtension = FilenameUtils.getExtension(futureRestoreFileName);
+
+                if (downloadedFileExtension.toLowerCase() == "exe")
+                {
+                    try {
+                        // Move the EXE directly into the extracted directory path
+                        FileUtils.moveFileToDirectory(downloadedFr, extractedDir, false);
+                        // Declare this file
+                        futureRestoreExecutable = new File(extractedDir + "/" + futureRestoreFileName);
+                    } catch (IOException exception) {
+                        System.out.println("Unable to move " + downloadedFr);
+                        messageToLog("Unable to move " + downloadedFr);
+                        exception.printStackTrace();
+                    }
                 }
+                else
+                {
+                    try {
+                        futureRestoreExecutable = extractFutureRestore(downloadedFr, finalFrPath, osName);
+                    } catch (IOException | ArchiveException exception) {
+                        System.out.println("Unable to decompress " + downloadedFr);
+                        messageToLog("Unable to decompress " + downloadedFr);
+                        exception.printStackTrace();
+                    }
+                }
+                
                 // If it fails, set the current task to nothing
                 if (futureRestoreExecutable == null) {
                     SwingUtilities.invokeLater(() -> currentTaskTextField.setText(""));
                 } else {
                     currentTaskTextField.setText("");
-                    messageToLog("Decompressed FutureRestore");
+                    if (downloadedFileExtension.toLowerCase() != "exe")
+                    	messageToLog("Decompressed FutureRestore");
+                    else
+                    	messageToLog("Moved FutureRestore executable");
                     futureRestoreFilePath = futureRestoreExecutable.getAbsolutePath();
                     properties.setProperty("previous_futurerestore", futureRestoreFilePath);
                     savePreferences();
