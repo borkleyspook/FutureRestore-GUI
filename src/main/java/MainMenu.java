@@ -216,7 +216,7 @@ public class MainMenu {
                 String futureRestoreFileName = downloadedFr.getName();
                 String downloadedFileExtension = FilenameUtils.getExtension(futureRestoreFileName);
 
-                if (downloadedFileExtension.toLowerCase() == "exe")
+                if (downloadedFileExtension.toLowerCase().equals("exe"))
                 {
                     try {
                         // Move the EXE directly into the extracted directory path
@@ -245,10 +245,10 @@ public class MainMenu {
                     SwingUtilities.invokeLater(() -> currentTaskTextField.setText(""));
                 } else {
                     currentTaskTextField.setText("");
-                    if (downloadedFileExtension.toLowerCase() != "exe")
-                    	messageToLog("Decompressed FutureRestore");
+                    if (downloadedFileExtension.toLowerCase().equals("exe"))
+                        messageToLog("Moved FutureRestore executable");
                     else
-                    	messageToLog("Moved FutureRestore executable");
+                        messageToLog("Decompressed FutureRestore");
                     futureRestoreFilePath = futureRestoreExecutable.getAbsolutePath();
                     properties.setProperty("previous_futurerestore", futureRestoreFilePath);
                     savePreferences();
@@ -947,6 +947,7 @@ public class MainMenu {
     int lineNumber = 1;
 
     void messageToLog(String string) {
+        System.out.println(string);
         SwingUtilities.invokeLater(() -> {
             logTextArea.append("[" + lineNumber + "] " + string + "\n");
             lineNumber++;
