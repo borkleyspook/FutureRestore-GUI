@@ -1111,7 +1111,7 @@ public class MainMenu {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            System.out.println(json);
+            // System.out.println(json);
         } 
         catch (IOException ex) 
         {

@@ -346,7 +346,7 @@ public class SettingsMenu {
         gbc.insets = new Insets(0, 10, 0, 0);
         settingsMenuView.add(futureRestoreBetaCheckBox, gbc);
         futureRestoreGUIBetaCheckBox = new JCheckBox();
-        futureRestoreGUIBetaCheckBox.setText("FutureRestore GUI Beta Track");
+        futureRestoreGUIBetaCheckBox.setText("FutureRestore GUI Beta");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 11;
